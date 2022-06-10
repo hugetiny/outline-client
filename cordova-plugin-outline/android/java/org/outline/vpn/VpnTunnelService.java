@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.outline.IVpnTunnelService;
 import org.outline.OutlinePlugin;
@@ -151,11 +152,12 @@ public class VpnTunnelService extends VpnService {
    *
    * @param tunnelId unique identifier for the tunnel.
    * @param config JSON object containing TunnelConfig values.
+   * @param policy JSON object containing the RoutingPolicy for split tunnel.
    * @throws IllegalArgumentException if `tunnelId` or `config` are null.
    * @throws JSONException if parsing `config` fails.
    * @return populated TunnelConfig
    */
-  public static TunnelConfig makeTunnelConfig(final String tunnelId, final JSONObject config)
+  public static TunnelConfig makeTunnelConfig(final String tunnelId, final JSONObject config, final JSONObject policy)
       throws Exception {
     if (tunnelId == null || config == null) {
       throw new IllegalArgumentException("Must provide a tunnel ID and JSON configuration");
@@ -167,6 +169,11 @@ public class VpnTunnelService extends VpnService {
     tunnelConfig.proxy.port = config.getInt("port");
     tunnelConfig.proxy.password = config.getString("password");
     tunnelConfig.proxy.method = config.getString("method");
+    tunnelConfig.policy.excludedDomains = policy.getString("excludedDomains");
+    JSONArray excludedSubnets = policy.getJSONArray("excludedSubnets");
+    for (int i = 0; i < excludedSubnets.length(); i++) {
+      tunnelConfig.policy.excludedSubnets.add(excludedSubnets.getString(i));
+    }
     try {
       // `name` is an optional property; don't throw if it fails to parse.
       tunnelConfig.name = config.getString("name");
@@ -222,6 +229,7 @@ public class VpnTunnelService extends VpnService {
 
     if (!isRestart) {
       // Only establish the VPN if this is not a tunnel restart.
+      // TODO(M1): Pass excluded subnets here.
       if (!vpnTunnel.establishVpn()) {
         LOG.severe("Failed to establish the VPN");
         tearDownActiveTunnel();
@@ -234,7 +242,7 @@ public class VpnTunnelService extends VpnService {
         isAutoStart ? tunnelStore.isUdpSupported() : errorCode == OutlinePlugin.ErrorCode.NO_ERROR;
     try {
       vpnTunnel.connectTunnel(proxyConfig.host, proxyConfig.port, proxyConfig.password,
-          proxyConfig.method, remoteUdpForwardingEnabled);
+          proxyConfig.method, remoteUdpForwardingEnabled, config.policy.excludedDomains, config.policy.excludedSubnets);
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Failed to connect the tunnel", e);
       tearDownActiveTunnel();
@@ -410,7 +418,8 @@ public class VpnTunnelService extends VpnService {
     try {
       final String tunnelId = tunnel.getString(TUNNEL_ID_KEY);
       final JSONObject jsonConfig = tunnel.getJSONObject(TUNNEL_CONFIG_KEY);
-      final TunnelConfig config = makeTunnelConfig(tunnelId, jsonConfig);
+      // FIXME: Restore routing policy
+      final TunnelConfig config = makeTunnelConfig(tunnelId, jsonConfig, new JSONObject());
       // Start the service in the foreground as per Android 8+ background service execution limits.
       // Requires android.permission.FOREGROUND_SERVICE since Android P.
       startForegroundWithNotification(config);

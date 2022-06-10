@@ -21,7 +21,7 @@ import {Server, ServerRepository} from '../model/server';
 
 import {ShadowsocksConfig} from './config';
 import {NativeNetworking} from './net';
-import {Tunnel, TunnelFactory, TunnelStatus} from './tunnel';
+import {RoutingPolicy, Tunnel, TunnelFactory, TunnelStatus} from './tunnel';
 
 export class OutlineServer implements Server {
   // We restrict to AEAD ciphers because unsafe ciphers are not supported in go-tun2socks.
@@ -29,6 +29,7 @@ export class OutlineServer implements Server {
   private static readonly SUPPORTED_CIPHERS = ['chacha20-ietf-poly1305', 'aes-128-gcm', 'aes-192-gcm', 'aes-256-gcm'];
 
   errorMessageId?: string;
+  policy?: RoutingPolicy;
   private config: ShadowsocksConfig;
 
   constructor(
@@ -79,7 +80,7 @@ export class OutlineServer implements Server {
 
   async connect() {
     try {
-      await this.tunnel.start(this.config);
+      await this.tunnel.start(this.config, this.policy);
     } catch (e) {
       // e originates in "native" code: either Cordova or Electron's main process.
       // Because of this, we cannot assume "instanceof OutlinePluginError" will work.
