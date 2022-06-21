@@ -15,7 +15,7 @@
 import * as errors from '../model/errors';
 import * as events from '../model/events';
 import {Server} from '../model/server';
-import {ServerListItem, ServerConnectionState} from '../views/servers_view';
+import {ServerConnectionState, ServerListItem} from '../views/servers_view';
 
 import {Clipboard} from './clipboard';
 import {EnvironmentVariables} from './environment';
@@ -238,12 +238,14 @@ export class App {
   }
 
   private handleClipboardText(text: string) {
+    //TODO 剪切板
     // Shorten, sanitise.
     // Note that we always check the text, even if the contents are same as last time, because we
     // keep an in-memory cache of user-ignored access keys.
-    text = text.substring(0, 1000).trim();
+    // text = text.substring(0, 1000).trim();
     try {
-      this.confirmAddServer(text, true);
+      text.trim().split('\n');
+      for (const key of text) this.confirmAddServer(key, true);
     } catch (err) {
       // Don't alert the user; high false positive rate.
     }
@@ -265,7 +267,10 @@ export class App {
 
   private requestAddServer(event: CustomEvent) {
     try {
-      this.serverRepo.add(event.detail.accessKey);
+      const accessKeys = event.detail.accessKey.trim().split('\n');
+      for (const singleKey of accessKeys) {
+        this.serverRepo.add(singleKey);
+      }
     } catch (err) {
       this.changeToDefaultPage();
       this.showLocalizedError(err);
@@ -276,6 +281,7 @@ export class App {
     const accessKey = event.detail.accessKey;
     console.debug('Got add server confirmation request from UI');
     try {
+      console.debug('try to confirm add sever.');
       this.confirmAddServer(accessKey);
     } catch (err) {
       console.error('Failed to confirm add sever.', err);
@@ -285,27 +291,37 @@ export class App {
   }
 
   private confirmAddServer(accessKey: string, fromClipboard = false) {
+    //accessKey是一堆
+    const accessKeys = accessKey.trim().split('\n');
+    const availableKeys = [];
     const addServerView = this.rootEl.$.addServerView;
-    accessKey = unwrapInvite(accessKey);
-    if (fromClipboard) {
-      if (accessKey in this.ignoredAccessKeys) {
-        return console.debug('Ignoring access key');
-      } else if (fromClipboard && addServerView.isAddingServer()) {
-        return console.debug('Already adding a server');
+    for (let singleKey of accessKeys) {
+      console.debug('singleKey', singleKey);
+      singleKey = unwrapInvite(singleKey);
+      if (fromClipboard) {
+        if (singleKey in this.ignoredAccessKeys) {
+          return console.debug('Ignoring access key');
+        } else if (fromClipboard && addServerView.isAddingServer()) {
+          return console.debug('Already adding a server');
+        }
+      }
+      try {
+        this.serverRepo.validateAccessKey(singleKey);
+        availableKeys.push(singleKey);
+      } catch (e) {
+        if (!fromClipboard && e instanceof errors.ServerAlreadyAdded) {
+          // Display error message and don't propagate error if this is not a clipboard add.
+          // addServerView.close();
+          this.showLocalizedError(e);
+          // return;
+        }
+        // Propagate access key validation error.
+        // throw e;
       }
     }
-    try {
-      this.serverRepo.validateAccessKey(accessKey);
-      addServerView.openAddServerConfirmationSheet(accessKey);
-    } catch (e) {
-      if (!fromClipboard && e instanceof errors.ServerAlreadyAdded) {
-        // Display error message and don't propagate error if this is not a clipboard add.
-        addServerView.close();
-        this.showLocalizedError(e);
-        return;
-      }
-      // Propagate access key validation error.
-      throw e;
+    if (availableKeys.length !== 0) {
+      console.debug('availableKeys', availableKeys);
+      addServerView.openAddServerConfirmationSheet(availableKeys.toString().replace(/,/g, '\n'));
     }
   }
 
@@ -487,8 +503,9 @@ export class App {
 
   private onServerForgetUndone(event: events.ServerForgetUndone) {
     this.syncServersToUI();
-    const server = event.server;
-    this.rootEl.showToast(this.localize('server-forgotten-undo', 'serverName', this.getServerDisplayName(server)));
+    this.rootEl.showToast(
+      this.localize('server-forgotten-undo', 'serverName', this.getServerDisplayName(event.server))
+    );
   }
 
   private onServerRenamed(event: events.ServerForgotten) {
@@ -520,6 +537,10 @@ export class App {
       address: server.address,
       id: server.id,
       connectionState: ServerConnectionState.DISCONNECTED,
+      // more detail
+      port: server.port,
+      password: server.password,
+      method: server.method,
     };
   }
 
@@ -561,6 +582,7 @@ export class App {
         return console.debug(`Ignoring intercepted non-shadowsocks url`);
       }
       try {
+        console.debug('registerUrlInterceptionListener url', url);
         this.confirmAddServer(url);
       } catch (err) {
         this.showLocalizedErrorInDefaultPage(err);

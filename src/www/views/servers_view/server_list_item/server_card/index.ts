@@ -80,7 +80,7 @@ const sharedCSS = css`
   .card-metadata-server-name {
     -webkit-box-orient: vertical;
     /* https://caniuse.com/?search=line-clamp */
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 1;
     color: var(--outline-text-color);
     display: -webkit-box;
     font-family: var(--outline-font-family);
@@ -177,10 +177,11 @@ const getSharedComponents = (element: ServerListItemElement & LitElement) => {
     elements: {
       metadataText: html`
         <div class="card-metadata-text">
-          <h2 class="card-metadata-server-name" id="server-name">
-            ${messages.serverName}
-          </h2>
+          <h2 class="card-metadata-server-name" id="server-name">${messages.serverName}</h2>
           <label class="card-metadata-server-address">${server.address}</label>
+          <label class="card-metadata-server-address">:${server.port}</label>
+          <label class="card-metadata-server-address">${server.password}</label>
+          <label class="card-metadata-server-address">${server.method}</label>
         </div>
       `,
       menu: html`
@@ -197,17 +198,17 @@ const getSharedComponents = (element: ServerListItemElement & LitElement) => {
           @click=${handleMenuOpen}
         ></mwc-icon-button>
       `,
-      footer: html`
-        <footer class="card-footer">
-          <span class="card-error">${messages.error}</span>
-          <mwc-button
-            label="${messages.connectButton}"
-            @click="${dispatchers.connectToggle}"
-            ?disabled=${hasErrorMessage}
-          >
-          </mwc-button>
-        </footer>
-      `,
+      // footer: html`
+      //   <footer class="card-footer">
+      //     <span class="card-error">${messages.error}</span>
+      //     <mwc-button
+      //       label="${messages.connectButton}"
+      //       @click="${dispatchers.connectToggle}"
+      //       ?disabled=${hasErrorMessage}
+      //     >
+      //     </mwc-button>
+      //   </footer>
+      // `,
     },
   };
 };
@@ -241,22 +242,25 @@ export class ServerRowCard extends LitElement implements ServerListItemElement {
           'footer footer footer footer';
       }
 
-      server-connection-indicator {
-        float: left;
-      }
+      //server-connection-indicator {
+      //  float: left;
+      //}
     `,
   ];
 
   render() {
-    const {elements} = getSharedComponents(this);
+    const {elements, dispatchers} = getSharedComponents(this);
 
     return html`
       <div class="card">
         <div class="card-metadata" aria-labelledby="server-name">
-          <server-connection-indicator connection-state="${this.server.connectionState}"></server-connection-indicator>
+          <server-connection-indicator
+            connection-state="${this.server.connectionState}"
+            @click="${!this.server.errorMessageId && dispatchers.connectToggle}"
+          ></server-connection-indicator>
           ${elements.metadataText}
         </div>
-        ${elements.menuButton} ${elements.footer}
+        ${elements.menuButton}
       </div>
       ${elements.menu}
     `;
@@ -349,7 +353,6 @@ export class ServerHeroCard extends LitElement implements ServerListItemElement 
           ></server-connection-indicator>
           <label class="card-connection-label" for="${messages.connectButton}">${connectionStatusText}</label>
         </div>
-        ${elements.footer}
       </div>
       ${elements.menu}
     `;

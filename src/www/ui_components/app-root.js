@@ -31,6 +31,7 @@ import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-item/paper-icon-item.js';

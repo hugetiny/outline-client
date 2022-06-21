@@ -9,7 +9,7 @@
     "format": "pretty-quick --staged --pattern \"**/*.{cjs,mjs,html,js,json,md,ts}\"",
     "format:all": "prettier --write \"**/*.{cjs,mjs,html,js,json,md,ts}\"",
     "lint": "npm run lint:ts",
-    "lint:ts": "eslint 'src/**/*.ts'",
+    "lint:ts": "eslint \"src/**/*.ts\"",
     "reset": "npm run clean && npm ci"
   },
   "comments": {
@@ -115,6 +115,7 @@
     "puppeteer": "^13.1.2",
     "rimraf": "^2.7.1",
     "rmfr": "^2.0.0",
+    "storybook": "^6.5.9",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.14",
     "typescript": "^3.9.7",

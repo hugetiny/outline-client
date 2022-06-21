@@ -64,6 +64,7 @@ function createServerRepo(
           port: 123,
           method: 'chacha20-ietf-poly1305',
           name: 'Fake Working Server',
+          password: 'sadasd',
         })
       );
       repo.add(
@@ -72,6 +73,7 @@ function createServerRepo(
           port: 123,
           method: 'chacha20-ietf-poly1305',
           name: 'Fake Broken Server',
+          password: 'sadasd',
         })
       );
       repo.add(
@@ -80,6 +82,7 @@ function createServerRepo(
           port: 123,
           method: 'chacha20-ietf-poly1305',
           name: 'Fake Unreachable Server',
+          password: 'sadasd',
         })
       );
     }

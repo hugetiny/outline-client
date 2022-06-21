@@ -33,6 +33,9 @@ export interface ServerListItem {
   id: string;
   name: string;
   connectionState: ServerConnectionState;
+  port: number;
+  password: string;
+  method: string;
 }
 
 /**

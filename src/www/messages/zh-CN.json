@@ -56,7 +56,8 @@
   "reconnecting-server-state": "正在重新连接…",
   "save": "保存",
   "server-access-key-detected": "已检测到访问密钥",
-  "server-access-key-label": "ss://access-key",
+  "server-access-key-label": "ss://access-key1\nss://access-key2",
+
   "server-add": "添加服务器",
   "server-add-access-key": "添加访问密钥",
   "server-add-ignore": "忽略",

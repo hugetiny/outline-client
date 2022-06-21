@@ -28,90 +28,103 @@ Polymer({
         --error-color: #f44336;
         --success-color: #00bfa5;
       }
-      :host a {
-        color: var(--medium-green);
-        text-decoration: none;
-      }
+
+      /*:host a {*/
+      /*  color: var(--medium-green);*/
+      /*  text-decoration: none;*/
+      /*}*/
+
       paper-dialog {
         margin: 0 auto;
-        position: fixed;
-        bottom: 0;
+        /*position: fixed;*/
+        top: 8px;
         width: 100%;
-        overflow: hidden;
+        /*overflow: hidden;*/
       }
-      .vertical-margin {
-        margin: 24px 0;
-      }
-      .title {
-        font-size: 20px;
-        line-height: 32px;
-        padding-bottom: 12px;
-      }
+      /*.vertical-margin {*/
+      /*  margin: 24px 0;*/
+      /*}*/
+      /*.title {*/
+      /*  font-size: 20px;*/
+      /*  line-height: 32px;*/
+      /*  padding-bottom: 12px;*/
+      /*}*/
+
       .faded {
         color: rgba(0, 0, 0, 0.54);
       }
+
       .center {
         text-align: center;
       }
+
       .shadow {
         box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.12), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
         border-radius: 2px;
       }
+
       .top-divider {
         border-top-width: 1px;
         border-top-color: rgba(0, 0, 0, 0.08);
         border-top-style: solid;
       }
+
       /* rtl:ignore */
-      paper-input {
-        margin: 24px;
-        --paper-input-container-underline: {
-          display: none;
-        }
-        --paper-input-container-underline-focus: {
-          display: none;
-        }
-        --paper-input-container-underline-disabled: {
-          display: none;
-        }
-        --paper-input-container: {
-          padding: 18px 0;
-        }
-      }
-      #addServerSheet paper-input {
-        --paper-input-container-label: {
-          color: rgba(0, 0, 0, 0.3);
-        }
-      }
+      /*paper-dialog {*/
+      /*  margin: 24px;*/
+      /*  --paper-input-container-underline: {*/
+      /*    display: none;*/
+      /*  }*/
+      /*  --paper-input-container-underline-focus: {*/
+      /*    display: none;*/
+      /*  }*/
+      /*  --paper-input-container-underline-disabled: {*/
+      /*    display: none;*/
+      /*  }*/
+      /*  --paper-input-container: {*/
+      /*    padding: 18px 0;*/
+      /*  }*/
+      /*}*/
+
+      /*#addServerSheet paper-input {*/
+      /*  --paper-input-container-label: {*/
+      /*    color: rgba(0, 0, 0, 0.3);*/
+      /*  }*/
+      /*}*/
+
       .footer {
         margin: 0;
         padding: 24px 36px;
         background: #fafafa;
         color: #737373;
       }
+
       #server-config {
         padding: 24px;
       }
-      #serverDetectedSheet paper-input {
-        /* For some strange reason, Apple increases the brightness of the input. Reduce it, baring
-         * in mind the trade-off with respect to Android, which displays the text appropriately.
-         * Also note that both opacity declarations are required for it to be applied in Apple.
-         */
-        --paper-input-container-input-color: var(--success-color);
-        --paper-input-container-disabled: {
-          opacity: 1;
-        }
-        --paper-input-container-input: {
-          opacity: 1;
-          filter: brightness(0.8);
-          /* Do not flip the access key. */
-          direction: ltr /* rtl:ignore */;
-        }
-      }
-      paper-button {
-        margin: 0;
-        font-weight: 500;
-      }
+
+      /*#serverDetectedSheet paper-input {*/
+      /*  !* For some strange reason, Apple increases the brightness of the input. Reduce it, baring*/
+      /*   * in mind the trade-off with respect to Android, which displays the text appropriately.*/
+      /*   * Also note that both opacity declarations are required for it to be applied in Apple.*/
+      /*   *!*/
+      /*  --paper-input-container-input-color: var(--success-color);*/
+      /*  --paper-input-container-disabled: {*/
+      /*    opacity: 1;*/
+      /*  }*/
+      /*  --paper-input-container-input: {*/
+      /*    opacity: 1;*/
+      /*    filter: brightness(0.8);*/
+      /*    !* Do not flip the access key. *!*/
+      /*    direction: ltr !* rtl:ignore *!;*/
+      /*  }*/
+      /*}*/
+
+      /*paper-button {*/
+      /*  margin: 0;*/
+      /*  font-weight: 500;*/
+      /*}*/
+
       .button-container {
         display: -webkit-box;
         display: -moz-box;
@@ -119,70 +132,86 @@ Polymer({
         display: -webkit-flex;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 48px;
+        /*margin-bottom: 48px;*/
       }
+
       .input-focus {
         text-align: left;
       }
+
       .input-invalid {
         color: var(--error-color);
         --paper-input-container-input-color: var(--error-color);
       }
+
       #add-server-button {
         background-color: var(--dark-green);
         color: #fff;
         padding: 0 20px;
       }
-      paper-input iron-icon {
-        --iron-icon-fill-color: #333;
-        opacity: 0.4;
-        margin-left: 12px;
-      }
+
+      /*paper-input iron-icon {*/
+      /*  --iron-icon-fill-color: #333;*/
+      /*  opacity: 0.4;*/
+      /*  margin-left: 12px;*/
+      /*}*/
+
       #serverDetectedSheet iron-icon {
         opacity: 1;
         --iron-icon-fill-color: var(--success-color);
       }
+
       /* Reverse key icon */
       :host(:dir(rtl)) iron-icon {
         transform: scaleX(-1);
       }
     </style>
 
-    <paper-dialog id="addServerSheet" with-backdrop>
-      <div class="vertical-margin">
-        <div class="title">[[localize('server-add-access-key')]]</div>
-        <div class="faded">[[localize('server-add-instructions')]]</div>
-      </div>
-      <paper-input id="accessKeyInput" class="shadow" label="[[localize('server-access-key-label', 'ssProtocol', 'ss://')]]" no-label-float="" value="{{accessKey}}" pattern="((ss://)|(https://s3\\.amazonaws\\.com/outline-vpn/((index\\.html.*[#].*/invite/)|(invite\\.html.*[#]))ss)).*">
-        <iron-icon icon="communication:vpn-key" slot="suffix"></iron-icon>
-      </paper-input>
-      <div class="footer center top-divider">
-        <div id="addServerFooter" inner-h-t-m-l="[[localize('server-create-your-own', 'breakLine', '<br/>', 'openLink', '<a href=https://s3.amazonaws.com/outline-vpn/index.html>', 'closeLink', '</a>')]]"></div>
-        <div id="invalidAccessKeyFooter" hidden="" inner-h-t-m-l="[[localize('server-add-invalid', 'openLine', '<span class=input-invalid>', 'closeLine', '</span><br/>')]]"></div>
-      </div>
+    <paper-dialog id="addServerSheet">
+      <!--      <div class="vertical-margin">-->
+      <div
+        id="addServerFooter"
+        inner-h-t-m-l="[[localize('server-create-your-own', 'breakLine', '<br/>', 'openLink', '<a href=https://s3.amazonaws.com/outline-vpn/index.html>', 'closeLink', '</a>')]]"
+      ></div>
+      <div
+        id="invalidAccessKeyFooter"
+        hidden=""
+        inner-h-t-m-l="[[localize('server-add-invalid', 'openLine', '<span class=input-invalid>', 'closeLine', '</span><br/>')]]"
+      ></div>
+      <div class="title">[[localize('server-add-access-key')]]</div>
+      <div class="faded">[[localize('server-add-instructions')]]</div>
+      <!--      </div>-->
+      <paper-textarea
+        id="accessKeyInput"
+        class="shadow"
+        rows="2"
+        placeholder="[[localize('server-access-key-label', 'ssProtocol', 'ss://')]]"
+        value="{{accessKey}}"
+        pattern="((ss://)|(https://s3\\.amazonaws\\.com/outline-vpn/((index\\.html.*[#].*/invite/)|(invite\\.html.*[#]))ss)).*"
+      >
+      </paper-textarea>
+      <div class="footer center top-divider"></div>
     </paper-dialog>
 
     <!-- no-cancel-on-outside-click prevents the dialog appearing for only
          an instant when the user clicks on some other part of the window.
          This is a real problem on desktop. -->
-    <paper-dialog id="serverDetectedSheet" with-backdrop no-cancel-on-outside-click>
-      <div class="vertical-margin">
-        <div class="title">[[localize('server-access-key-detected')]]</div>
-        <div class="faded">
-          [[localize('server-detected')]]
-        </div>
+    <paper-dialog id="serverDetectedSheet">
+      <!--      <div class="vertical-margin">-->
+      <div class="button-container">
+        <paper-button class="faded" on-tap="_ignoreDetectedServer">[[localize('server-add-ignore')]]</paper-button>
+        <paper-button id="add-server-button" on-tap="_addDetectedServer">[[localize('server-add')]]</paper-button>
+      </div>
+      <div class="title">[[localize('server-access-key-detected')]]</div>
+      <div class="faded">
+        [[localize('server-detected')]]
+        <!--        </div>-->
         <div class="shadow vertical-margin">
-          <paper-input value="[[accessKey]]" no-label-float="" disabled="">
-            <iron-icon icon="communication:vpn-key" slot="suffix"></iron-icon>
-          </paper-input>
-        </div>
-        <div class="button-container">
-          <paper-button class="faded" on-tap="_ignoreDetectedServer">[[localize('server-add-ignore')]]</paper-button>
-          <paper-button id="add-server-button" on-tap="_addDetectedServer">[[localize('server-add')]]</paper-button>
+          <paper-textarea value="[[accessKey]]" readonly> </paper-textarea>
         </div>
       </div>
     </paper-dialog>
-`,
+  `,
 
   is: 'add-server-view',
 
@@ -225,9 +254,13 @@ Polymer({
 
   _accessKeyChanged: function() {
     // Use debounce to detect when the user has stopped typing.
-    this.debounce('accessKeyChanged', () => {
-      this._addServerFromInput();
-    }, 750);
+    this.debounce(
+      'accessKeyChanged',
+      () => {
+        this._addServerFromInput();
+      },
+      750
+    );
   },
 
   _addServerFromInput: function() {
@@ -237,6 +270,7 @@ Polymer({
       return;
     }
     if (accessKeyInput.validate()) {
+      console.debug('fire AddServerConfirmationRequested');
       this.fire('AddServerConfirmationRequested', {accessKey: this.accessKey});
     }
   },
@@ -291,5 +325,5 @@ Polymer({
 
   _disallowScroll: function(event) {
     event.preventDefault();
-  }
+  },
 });

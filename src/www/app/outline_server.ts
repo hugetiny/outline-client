@@ -70,7 +70,19 @@ export class OutlineServer implements Server {
   }
 
   get address() {
-    return `${this.config.host}:${this.config.port}`;
+    return this.config.host;
+  }
+
+  get port() {
+    return this.config.port;
+  }
+
+  get password() {
+    return this.config.password;
+  }
+
+  get method() {
+    return this.config.method;
   }
 
   get isOutlineServer() {
@@ -216,8 +228,10 @@ export class OutlineServerRepository implements ServerRepository {
   }
 
   private serverFromAccessKey(accessKey: string): OutlineServer | undefined {
+    // console.debug(this.serverById)
     for (const server of this.serverById.values()) {
       if (accessKeysMatch(accessKey, server.accessKey)) {
+        console.debug(server);
         return server;
       }
     }

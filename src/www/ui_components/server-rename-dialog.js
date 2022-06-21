@@ -29,7 +29,7 @@ Polymer({
         --paper-input-container-focus-color: var(--medium-green);
       }
     </style>
-    <paper-dialog id="renameDialog" with-backdrop="">
+    <paper-dialog id="renameDialog">
       <h3>[[localize('server-rename')]]</h3>
       <paper-input id="serverNameInput" always-float-label="" maxlength="100" tabindex="0"></paper-input>
       <div class="buttons">
@@ -37,7 +37,7 @@ Polymer({
         <paper-button dialog-confirm="" on-tap="_saveRename">[[localize('save')]]</paper-button>
       </div>
     </paper-dialog>
-`,
+  `,
 
   is: 'server-rename-dialog',
 
@@ -68,5 +68,5 @@ Polymer({
     if (newName !== this.__serverName) {
       this.fire('RenameRequested', {serverId: this.__serverId, newName: newName});
     }
-  }
+  },
 });

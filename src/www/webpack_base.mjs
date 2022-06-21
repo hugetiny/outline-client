@@ -34,7 +34,7 @@ export const baseConfig = {
   devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.js', '.mts', '.mjs'],
-    fallback: {url: require.resolve('url/')},
+    // fallback: {url: require.resolve('url/')},
   },
   optimization: {
     minimizer: [

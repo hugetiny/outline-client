@@ -16,6 +16,7 @@
 
 export interface Server {
   // A unique id that identifies this Server.
+
   readonly id: string;
 
   // The name of this server, as given by the user.
@@ -23,6 +24,10 @@ export interface Server {
 
   // The address of the service.
   address: string;
+  // others
+  port: number;
+  password: string;
+  method: string;
 
   // Whether this is an Outline server (access key ends in 'outline=1').
   // Used to provide a default name to the server card.
